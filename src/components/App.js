@@ -1,77 +1,21 @@
 import React, { Component } from 'react';
-import '../css/App.css';
+import { findIndex, without } from 'lodash';
 
 import AddAppointments from './AddAppointments';
 import SearchAppointments from './SearchAppointments';
 import ListAppointments from './ListAppointments';
 
-import { findIndex, without } from 'lodash';
+import '../css/App.css';
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      myAppointments: [],
-      formDisplay: false,
-      orderBy: 'petName',
-      orderDir: 'asc',
-      queryText: '',
-      lastIndex: 0
-    };
-    this.deleteAppointment = this.deleteAppointment.bind(this);
-    this.toggleForm = this.toggleForm.bind(this);
-    this.addAppointment = this.addAppointment.bind(this);
-    this.changeOrder = this.changeOrder.bind(this);
-    this.searchApts = this.searchApts.bind(this);
-    this.updateInfo = this.updateInfo.bind(this);
-  }
-
-  toggleForm() {
-    this.setState({
-      formDisplay: !this.state.formDisplay
-    });
-  }
-
-  searchApts(query) {
-    this.setState({ queryText: query });
-  }
-
-  changeOrder(order, dir) {
-    this.setState({
-      orderBy: order,
-      orderDir: dir
-    });
-  }
-
-  updateInfo(name, value, id) {
-    let tempApts = this.state.myAppointments;
-    let aptIndex = findIndex(this.state.myAppointments, {
-      aptId: id
-    });
-    tempApts[aptIndex][name] = value;
-    this.setState({
-      myAppointments: tempApts
-    });
-  }
-
-  addAppointment(apt) {
-    let tempApts = this.state.myAppointments;
-    apt.aptId = this.state.lastIndex;
-    tempApts.unshift(apt);
-    this.setState({
-      myAppointments: tempApts,
-      lastIndex: this.state.lastIndex + 1
-    });
-  }
-
-  deleteAppointment(apt) {
-    let tempApts = this.state.myAppointments;
-    tempApts = without(tempApts, apt);
-
-    this.setState({
-      myAppointments: tempApts
-    });
-  }
+  state = {
+    myAppointments: [],
+    formDisplay: false,
+    orderBy: 'petName',
+    orderDir: 'asc',
+    queryText: '',
+    lastIndex: 0
+  };
 
   componentDidMount() {
     fetch('./data.json')
@@ -86,6 +30,53 @@ class App extends Component {
           myAppointments: apts
         });
       });
+  }
+
+  toggleForm = () => {
+    this.setState({
+      formDisplay: !this.state.formDisplay
+    });
+  }
+
+  searchApts = (query) => {
+    this.setState({ queryText: query });
+  }
+
+  changeOrder = (order, dir) => {
+    this.setState({
+      orderBy: order,
+      orderDir: dir
+    });
+  }
+
+  updateInfo = (name, value, id) => {
+    let tempApts = this.state.myAppointments;
+    let aptIndex = findIndex(this.state.myAppointments, {
+      aptId: id
+    });
+    tempApts[aptIndex][name] = value;
+    this.setState({
+      myAppointments: tempApts
+    });
+  }
+
+  addAppointment = (apt) => {
+    let tempApts = this.state.myAppointments;
+    apt.aptId = this.state.lastIndex;
+    tempApts.unshift(apt);
+    this.setState({
+      myAppointments: tempApts,
+      lastIndex: this.state.lastIndex + 1
+    });
+  }
+
+  deleteAppointment = (apt) => {
+    let tempApts = this.state.myAppointments;
+    tempApts = without(tempApts, apt);
+
+    this.setState({
+      myAppointments: tempApts
+    });
   }
 
   render() {
