@@ -38,8 +38,9 @@ class App extends Component {
     });
   }
 
-  searchApts = (query) => {
-    this.setState({ queryText: query });
+  searchApts = (e) => {
+    const queryText = e.target.value;
+    this.setState({ queryText });
   }
 
   changeOrder = (order, dir) => {
